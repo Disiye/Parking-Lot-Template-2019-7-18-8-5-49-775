@@ -126,4 +126,36 @@ public class ParkingLotApplicationTests {
         assertEquals(20, obj.get("capacity"));
     }
 
+    @Test
+    public void should_return_parking_lots_page_when_find_parking_lot_page() throws Exception {
+
+        ParkingLot parkingLot1 = new ParkingLot("parkingLot1", 10, "location1");
+        String objectJson1 = new JSONObject(parkingLot1).toString();
+        this.mockMvc.perform(post("/parking-lots").contentType(MediaType.APPLICATION_JSON_UTF8).content(objectJson1)).andReturn();
+
+        ParkingLot parkingLot2 = new ParkingLot("parkingLot2", 10, "location2");
+        String objectJson2 = new JSONObject(parkingLot2).toString();
+        this.mockMvc.perform(post("/parking-lots").contentType(MediaType.APPLICATION_JSON_UTF8).content(objectJson2)).andReturn();
+
+        ParkingLot parkingLot3 = new ParkingLot("parkingLot3", 10, "location3");
+        String objectJson3 = new JSONObject(parkingLot3).toString();
+        this.mockMvc.perform(post("/parking-lots").contentType(MediaType.APPLICATION_JSON_UTF8).content(objectJson3)).andReturn();
+
+        ParkingLot parkingLot4 = new ParkingLot("parkingLot4", 10, "location4");
+        String objectJson4 = new JSONObject(parkingLot4).toString();
+        this.mockMvc.perform(post("/parking-lots").contentType(MediaType.APPLICATION_JSON_UTF8).content(objectJson4)).andReturn();
+
+        ParkingLot parkingLot5 = new ParkingLot("parkingLot5", 10, "location5");
+        String objectJson5 = new JSONObject(parkingLot5).toString();
+        this.mockMvc.perform(post("/parking-lots").contentType(MediaType.APPLICATION_JSON_UTF8).content(objectJson5)).andReturn();
+
+        List<ParkingLot> parkingLots = parkingLotRepository.findAll();
+        ParkingLot parkingLot = parkingLots.get(2);
+
+        String content = this.mockMvc.perform(get("/parking-lots?pageNumber=2&pageSize=2")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        JSONObject json = new JSONObject(content);
+
+        Assertions.assertEquals(2, json.get("size"));
+    }
+
 }

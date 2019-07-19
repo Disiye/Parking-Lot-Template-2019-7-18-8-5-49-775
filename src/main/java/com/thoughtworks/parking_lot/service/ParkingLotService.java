@@ -3,8 +3,11 @@ package com.thoughtworks.parking_lot.service;
 import com.thoughtworks.parking_lot.entity.ParkingLot;
 import com.thoughtworks.parking_lot.repository.ParkingLotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 
@@ -19,7 +22,7 @@ public class ParkingLotService {
         parkingLotRepository.save(parkingLot);
     }
 
-    public void deleteParkingLot(String id){
+    public void deleteParkingLot(String id) {
         parkingLotRepository.deleteById(id);
     }
 
@@ -32,5 +35,9 @@ public class ParkingLotService {
         ParkingLot parkingLotDb = parkingLotRepository.findById(id).get();
         parkingLotDb.setCapacity(parkingLot.getCapacity());
         return ResponseEntity.ok().body(parkingLotDb);
+    }
+
+    public Page<ParkingLot> findAllByPage(int pageNumber, int pageSize) {
+        return parkingLotRepository.findAll(PageRequest.of(pageNumber - 1, pageSize));
     }
 }

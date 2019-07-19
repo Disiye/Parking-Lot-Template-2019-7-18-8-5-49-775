@@ -32,6 +32,11 @@ public class ParkingLotController {
         return parkingLotService.getOne(id);
     }
 
+    @GetMapping(params = {"pageNumber", "pageSize"})
+    public ResponseEntity findAll(@RequestParam("pageNumber") int pageNumber, @RequestParam("pageSize") int pageSize) {
+        return ResponseEntity.ok().body(parkingLotService.findAllByPage(pageNumber, pageSize));
+    }
+
     @PutMapping("{id}")
     public ResponseEntity update(@RequestBody ParkingLot parkingLot, @PathVariable String id) {
         return parkingLotService.updateParkingLot(parkingLot, id);
