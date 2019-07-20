@@ -22,17 +22,16 @@ public class ParkingOrderService {
     private ParkingOrderRepository parkingOrderRepository;
 
     public ResponseEntity addParkingOrder(ParkingOrder parkingOrder) {
-        int capacity = 10;
-        String errorMsg= "The parking lot is full!";
+        String errorMsg = "The parking lot is full!";
         List<ParkingOrder> parkingOrders = parkingOrderRepository.findByNameAndStatus(parkingOrder.getParkingLotName(), true);
-        if(parkingOrders.size() < capacity){
-            ParkingLot parkingLot = parkingLotRepository.findByName(parkingOrder.getParkingLotName());
+        ParkingLot parkingLot = parkingLotRepository.findByName(parkingOrder.getParkingLotName());
+        if (parkingLot != null && parkingOrders.size() < parkingLot.getCapacity()) {
             parkingOrder.setBeginDate(new Date());
             parkingOrder.setParkingLot(parkingLot);
             parkingOrderRepository.save(parkingOrder);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
-        return ResponseEntity.badRequest().body(errorMsg);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMsg);
     }
 
     public ResponseEntity updateParkingOrder(String carLicenseNum) {

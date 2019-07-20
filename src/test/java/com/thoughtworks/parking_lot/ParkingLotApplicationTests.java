@@ -55,7 +55,10 @@ public class ParkingLotApplicationTests {
 
     @Test
     public void should_return_status_is_created_when_post_new_parking_lot() throws Exception {
+        //Given
         ParkingLot parkingLot = new ParkingLot("parkingLot1", 10, "parkingLot1");
+
+        //When + Than
         String objectJson = new JSONObject(parkingLot).toString();
         this.mockMvc.perform(post("/parking-lots").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectJson)).andExpect(status().isCreated());
@@ -63,10 +66,12 @@ public class ParkingLotApplicationTests {
 
     @Test
     public void should_return_exception_when_post_same_name() throws Exception {
+        //Given
         ParkingLot parkingLot = new ParkingLot("parkingLot1", 10, "parkingLot1");
         String objectJson = new JSONObject(parkingLot).toString();
         this.mockMvc.perform(post("/parking-lots").contentType(MediaType.APPLICATION_JSON_UTF8).content(objectJson)).andReturn();
 
+        //When + Than
         Assertions.assertThrows(Exception.class, () -> {
             this.mockMvc.perform(post("/parking-lots").contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(objectJson));
@@ -75,9 +80,11 @@ public class ParkingLotApplicationTests {
 
     @Test
     public void should_return_exception_when_post_negative_number() throws Exception {
+        //Given
         ParkingLot parkingLot = new ParkingLot("parkingLot1", -10, "parkingLot1");
         String objectJson = new JSONObject(parkingLot).toString();
 
+        //When + Than
         Assertions.assertThrows(Exception.class, () -> {
             this.mockMvc.perform(post("/parking-lots").contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(objectJson));
@@ -86,18 +93,25 @@ public class ParkingLotApplicationTests {
 
     @Test
     public void should_return_status_code_is_ok_when_delete_success() throws Exception {
+        //Given
         ParkingLot parkingLot = new ParkingLot("parkingLot1", 10, "parkingLot1");
         String objectJson = new JSONObject(parkingLot).toString();
         this.mockMvc.perform(post("/parking-lots").contentType(MediaType.APPLICATION_JSON_UTF8).content(objectJson)).andReturn();
 
+        //When
         List<ParkingLot> parkingLots = parkingLotRepository.findAll();
         String id = parkingLots.get(0).getId();
 
+        //Than
         this.mockMvc.perform(delete("/parking-lots/" + id)).andExpect(status().isOk());
+        Assertions.assertThrows(Exception.class, () -> {
+            this.mockMvc.perform(get("/parking-lots/" + id)).andReturn().getResponse().getContentAsString();
+        });
     }
 
     @Test
     public void should_return_parking_lot_when_find_parking_lot() throws Exception {
+        //Given
         ParkingLot parkingLot = new ParkingLot("parkingLot1", 10, "location1");
         String objectJson = new JSONObject(parkingLot).toString();
         this.mockMvc.perform(post("/parking-lots").contentType(MediaType.APPLICATION_JSON_UTF8).content(objectJson)).andReturn();
@@ -105,10 +119,12 @@ public class ParkingLotApplicationTests {
         List<ParkingLot> parkingLots = parkingLotRepository.findAll();
         String id = parkingLots.get(0).getId();
 
+        //When
         String content = this.mockMvc.perform(put("/parking-lots/" + id).contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectJson)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         JSONObject obj = new JSONObject(content);
 
+        //Than
         assertEquals("parkingLot1", obj.get("name"));
         assertEquals(10, obj.get("capacity"));
         assertEquals("location1", obj.get("location"));
@@ -116,25 +132,27 @@ public class ParkingLotApplicationTests {
 
     @Test
     public void should_return_update_parking_lot_capacity_when_put_new_parking_lot_capacity() throws Exception {
+        //Given
         ParkingLot parkingLot = new ParkingLot("parkingLot1", 10, "location1");
         String objectJson = new JSONObject(parkingLot).toString();
         this.mockMvc.perform(post("/parking-lots").contentType(MediaType.APPLICATION_JSON_UTF8).content(objectJson)).andReturn();
-
         List<ParkingLot> parkingLots = parkingLotRepository.findAll();
         String id = parkingLots.get(0).getId();
-
         ParkingLot newParkingLot = new ParkingLot("parkingLot1", 20, "location1");
 
+        //When
         String newObjectJson = new JSONObject(newParkingLot).toString();
         String content = this.mockMvc.perform(put("/parking-lots/" + id).contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(newObjectJson)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         JSONObject obj = new JSONObject(content);
+
+        //Then
         assertEquals(20, obj.get("capacity"));
     }
 
     @Test
     public void should_return_parking_lots_page_when_find_parking_lot_page() throws Exception {
-
+        //Given
         ParkingLot parkingLot1 = new ParkingLot("parkingLot1", 10, "location1");
         String objectJson1 = new JSONObject(parkingLot1).toString();
         this.mockMvc.perform(post("/parking-lots").contentType(MediaType.APPLICATION_JSON_UTF8).content(objectJson1)).andReturn();
@@ -158,9 +176,11 @@ public class ParkingLotApplicationTests {
         List<ParkingLot> parkingLots = parkingLotRepository.findAll();
         ParkingLot parkingLot = parkingLots.get(2);
 
+        //When
         String content = this.mockMvc.perform(get("/parking-lots?pageNumber=2&pageSize=2")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         JSONObject json = new JSONObject(content);
 
+        //Then
         Assertions.assertEquals(2, json.get("size"));
     }
 
