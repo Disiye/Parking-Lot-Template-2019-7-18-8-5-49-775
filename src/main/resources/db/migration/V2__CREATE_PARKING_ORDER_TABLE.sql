@@ -4,5 +4,7 @@ create table PARKING_ORDER (
     CAR_LICENSE_NUM varchar(100),
     BEGIN_DATE date,
     END_DATE date,
-    STATUS BOOLEAN
+    STATUS BOOLEAN,
+    PARKING_LOT_ID varchar(100)
+
 );

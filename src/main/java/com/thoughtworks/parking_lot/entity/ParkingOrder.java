@@ -30,7 +30,7 @@ public class ParkingOrder {
     private boolean status;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ID")
+    @JoinColumn(name = "PARKING_LOT_ID", referencedColumnName = "ID")
     private ParkingLot parkingLot;
 
     public ParkingOrder() {
