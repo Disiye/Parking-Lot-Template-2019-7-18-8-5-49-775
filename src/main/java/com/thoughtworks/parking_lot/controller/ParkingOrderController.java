@@ -20,8 +20,7 @@ public class ParkingOrderController {
 
     @PostMapping
     public ResponseEntity createParkingOrder(@RequestBody ParkingOrder parkingOrder) {
-        parkingOrderService.addParkingOrder(parkingOrder);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return parkingOrderService.addParkingOrder(parkingOrder);
     }
 
     @PutMapping("{carLicenseNum}")
