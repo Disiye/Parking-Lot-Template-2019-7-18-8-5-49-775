@@ -15,7 +15,7 @@ public class ParkingOrder {
     private String id;
 
     @Column(name = "PARKING_LOT_NAME")
-    private String ParkingLotName;
+    private String parkingLotName;
 
     @Column(name = "CAR_LICENSE_NUM")
     private String carLicenseNum;
@@ -30,19 +30,28 @@ public class ParkingOrder {
     private boolean status;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "PARKING_LOT_ID")
+    @JoinColumn(name = "ID")
     private ParkingLot parkingLot;
+
+    public ParkingOrder() {
+    }
+
+    public ParkingOrder(String parkingLotName, String carLicenseNum, boolean status) {
+        this.parkingLotName = parkingLotName;
+        this.carLicenseNum = carLicenseNum;
+        this.status = status;
+    }
 
     public String getId() {
         return id;
     }
 
     public String getParkingLotName() {
-        return ParkingLotName;
+        return parkingLotName;
     }
 
     public void setParkingLotName(String parkingLotName) {
-        ParkingLotName = parkingLotName;
+        this.parkingLotName = parkingLotName;
     }
 
     public String getCarLicenseNum() {

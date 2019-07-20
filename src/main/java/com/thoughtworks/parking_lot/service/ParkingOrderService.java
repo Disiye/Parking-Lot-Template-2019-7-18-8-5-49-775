@@ -1,5 +1,6 @@
 package com.thoughtworks.parking_lot.service;
 
+import com.thoughtworks.parking_lot.entity.ParkingLot;
 import com.thoughtworks.parking_lot.entity.ParkingOrder;
 import com.thoughtworks.parking_lot.repository.ParkingLotRepository;
 import com.thoughtworks.parking_lot.repository.ParkingOrderRepository;
@@ -13,15 +14,20 @@ import java.util.Date;
 public class ParkingOrderService {
 
     @Autowired
+    private ParkingLotRepository parkingLotRepository;
+
+    @Autowired
     private ParkingOrderRepository parkingOrderRepository;
 
     public void addParkingOrder(ParkingOrder parkingOrder) {
+        ParkingLot parkingLot = parkingLotRepository.findByName(parkingOrder.getParkingLotName());
+        parkingOrder.setBeginDate(new Date());
+        parkingOrder.setParkingLot(parkingLot);
         parkingOrderRepository.save(parkingOrder);
     }
 
     public ResponseEntity updateParkingOrder(String carLicenseNum) {
-        Boolean status = true;
-        ParkingOrder parkingOrderDb = parkingOrderRepository.findByCarLicenseNumAndStatus(carLicenseNum, status);
+        ParkingOrder parkingOrderDb = parkingOrderRepository.findByCarLicenseNumAndStatus(carLicenseNum, true);
         parkingOrderDb.setEndDate(new Date());
         parkingOrderDb.setStatus(false);
         return ResponseEntity.ok().body(parkingOrderDb);

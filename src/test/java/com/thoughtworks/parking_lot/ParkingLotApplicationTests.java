@@ -2,7 +2,9 @@ package com.thoughtworks.parking_lot;
 
 import antlr.build.Tool;
 import com.thoughtworks.parking_lot.entity.ParkingLot;
+import com.thoughtworks.parking_lot.entity.ParkingOrder;
 import com.thoughtworks.parking_lot.repository.ParkingLotRepository;
+import com.thoughtworks.parking_lot.repository.ParkingOrderRepository;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,6 +40,9 @@ public class ParkingLotApplicationTests {
 
     @Autowired
     private ParkingLotRepository parkingLotRepository;
+
+    @Autowired
+    private ParkingOrderRepository parkingOrderRepository;
 
     @Before
     public void deleteAll() {
